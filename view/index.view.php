@@ -9,63 +9,79 @@
 </head>
 <body>
 <div class="container">
-    <section>
 
-        <?php if (isset($_POST['send'])): ?>
+    <?php $validation_errors = []; ?>
+
+    <?php if (isset($_POST['send'])): ?>
+        <?php
+
+        if (empty($_POST['vardas']) || !preg_match('/[A-Z]/', $_POST['vardas'])) {
+            $validation_errors[] = "Vardas turi prasidėti didžiąja raide ir nėra tusčias";
+        }
+        if (empty($_POST['pavardė']) || !preg_match('/[A-ZŠė]/', $_POST['pavardė'])) {
+            $validation_errors[] = "Pavardė turi prasidėti didžiąja raide ir nėra tusčias";
+        }
+        if (empty($_POST['žinutė']) || !preg_match('/^[A-Za-z0-9]{1,200}$/', $_POST['žinutė'])) {
+            $validation_errors[] = "Žinutė per ilga!";
+        }
+        ?>
+    <?php endif; ?>
+
+    <div class="bg-primary text-light text-center">
         <h2>Formos duomenys</h2>
+    </div>
 
-        <?php if (empty($_POST['name']) || !preg_match('/[A-Z]/', $_POST['name'])): ?>
-            <?= $validation_errors[0]; ?>
-            <?php die(); ?>
+    <?php if (isset($_POST['send']) && empty($validation_errors)): ?>
 
-        <?php elseif (empty($_POST['lastname']) || !preg_match('/[A-ZŠ]/', $_POST['lastname'])): ?>
-            <?= $validation_errors[1]; ?>
-            <?php die(); ?>
-
-        <?php elseif (empty($_POST['message']) || !preg_match('/^[A-Za-z0-9]{1,200}$/', $_POST['message'])): ?>
-            <?= $validation_errors[2]; ?>
-            <?php die(); ?>
-        <?php endif; ?>
-
-        <?php foreach ($_POST as $field => $value): ?>
-            <?php if ($field != "send"): ?>
-                <li><span><?= htmlspecialchars(ucfirst($field)); ?>: </span><?= htmlspecialchars($value); ?></li>
-            <?php endif; ?>
-        <?php endforeach; ?>
-
-    </section>
+        <section>
+            <ul>
+                <?php foreach ($_POST as $field => $value): ?>
+                    <?php if ($field != "send"): ?>
+                        <li><span><?= htmlspecialchars(ucfirst($field)); ?>: </span><?= htmlspecialchars($value); ?>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        </section>
 
     <?php else: ?>
+
+        <?php foreach ($validation_errors as $errors): ?>
+            <div class="alert-danger m-2" role="alert">
+                <?= $errors; ?>
+            </div>
+        <?php endforeach; ?>
+
         <form method="post">
             <div class="form-group">
                 <label for="name">Vardas:</label>
-                <input type="text" name="name" id="name" class="form-control">
+                <input type="text" name="vardas" id="name" class="form-control">
             </div>
             <div class="form-group">
                 <label for="lastname">Pavardė:</label>
-                <input type="text" name="lastname" id="lastname" class="form-control">
+                <input type="text" name="pavardė" id="lastname" class="form-control">
             </div>
             <div class="form-group">
                 <label for="email">El. paštas:</label>
-                <input type="text" name="email" id="email" class="form-control">
+                <input type="text" name="el.apštas" id="email" class="form-control">
             </div>
-
-            <select class="form-select" name="departaments" aria-label="fault select example" name>
-                <option selected>--Pasirinkite departamentą</option>
-                De
-                <?php for ($i = 0; $i < count($departaments); $i++): ?>
-                    <option><?= ucfirst($departaments[$i]) ?></option>
-                <?php endfor; ?>
-            </select>
-
+            <div class="form-group">
+                <select class="form-control" name="skyrius" aria-label="fault select example" name>
+                    <option selected>--Pasirinkite departamentą</option>
+                    De
+                    <?php for ($i = 0; $i < count($departaments); $i++): ?>
+                        <option><?= ucfirst($departaments[$i]) ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="message">Jūsų žinutė:</label>
-                <input type="text" name="message" id="message" class="form-control">
+                <input type="text" name="žinutė" id="message" class="form-control">
             </div>
-
             <button type="submit" name="send" id="send" class="mt-3 btn btn-primary btn-lg text-center">Siusti</button>
         </form>
-    <?php endif; ?>
+    <?php endif ?>
+
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
