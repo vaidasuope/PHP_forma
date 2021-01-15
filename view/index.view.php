@@ -14,22 +14,25 @@
         <?php if (isset($_POST['send'])): ?>
         <h2>Formos duomenys</h2>
 
-        <?php if (empty($_POST['name']) || !preg_match('/[A-Z]/',$_POST['name'])):?>
-        <?=$validation_errors[0];?>
+        <?php if (empty($_POST['name']) || !preg_match('/[A-Z]/', $_POST['name'])): ?>
+            <?= $validation_errors[0]; ?>
+            <?php die(); ?>
 
-        <?php elseif (empty($_POST['lastname']) || !preg_match('/[A-Z]/',$_POST['lastname'])):?>
-            <?=$validation_errors[1];?>
+        <?php elseif (empty($_POST['lastname']) || !preg_match('/[A-ZŠ]/', $_POST['lastname'])): ?>
+            <?= $validation_errors[1]; ?>
+            <?php die(); ?>
 
-        <?php elseif (empty($_POST['message']) || !preg_match('/^[A-Za-z0-9]{1,200}$/',$_POST['message'])):?>-
-            <?=$validation_errors[2];?>
+        <?php elseif (empty($_POST['message']) || !preg_match('/^[A-Za-z0-9]{1,200}$/', $_POST['message'])): ?>
+            <?= $validation_errors[2]; ?>
+            <?php die(); ?>
+        <?php endif; ?>
 
-        <?php else: ?>
         <?php foreach ($_POST as $field => $value): ?>
             <?php if ($field != "send"): ?>
                 <li><span><?= htmlspecialchars(ucfirst($field)); ?>: </span><?= htmlspecialchars($value); ?></li>
             <?php endif; ?>
         <?php endforeach; ?>
-        <?php endif; ?>
+
     </section>
 
     <?php else: ?>
@@ -48,10 +51,11 @@
             </div>
 
             <select class="form-select" name="departaments" aria-label="fault select example" name>
-                <option selected>--Pasirinkite departamentą</option>De
-             <?php for ($i=0; $i<count($departaments); $i++):?>
-                <option><?=ucfirst($departaments[$i])?></option>
-                <?php endfor;?>
+                <option selected>--Pasirinkite departamentą</option>
+                De
+                <?php for ($i = 0; $i < count($departaments); $i++): ?>
+                    <option><?= ucfirst($departaments[$i]) ?></option>
+                <?php endfor; ?>
             </select>
 
             <div class="form-group">
