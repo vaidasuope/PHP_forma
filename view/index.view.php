@@ -8,44 +8,37 @@
 
 </head>
 <body>
+
 <div class="container">
 
-    <?php $validation_errors = []; ?>
 
     <?php if (isset($_POST['send'])): ?>
-        <?php
+        <?php validate($_POST); ?>
 
-        if (empty($_POST['vardas']) || !preg_match('/[A-Z]/', $_POST['vardas'])) {
-            $validation_errors[] = "Vardas turi prasidėti didžiąja raide ir nėra tusčias";
-        }
-        if (empty($_POST['pavardė']) || !preg_match('/[A-ZŠė]/', $_POST['pavardė'])) {
-            $validation_errors[] = "Pavardė turi prasidėti didžiąja raide ir nėra tusčias";
-        }
-        if (empty($_POST['žinutė']) || !preg_match('/^[A-Za-z0-9]{1,200}$/', $_POST['žinutė'])) {
-            $validation_errors[] = "Žinutė per ilga!";
-        }
-        ?>
     <?php endif; ?>
 
-    <div class="bg-primary text-light text-center">
+
+    <div class="bg-primary text-light text-center mt-2">
         <h2>Formos duomenys</h2>
     </div>
 
     <?php if (isset($_POST['send']) && empty($validation_errors)): ?>
-
-        <section>
-            <ul>
-                <?php foreach ($_POST as $field => $value): ?>
-                    <?php if ($field != "send"): ?>
-                        <li><span><?= htmlspecialchars(ucfirst($field)); ?>: </span><?= htmlspecialchars($value); ?>
-                        </li>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </ul>
-        </section>
+        <table class='table table-hover'>
+            <thead class="thead-dark">
+            <tr>
+                <th>Vardas</th>
+                <th>Pavardė</th>
+                <th>El. paštas</th>
+                <th>Departamentas</th>
+                <th>Žinutė</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php printData(); ?>
+            </tbody>
+        </table>
 
     <?php else: ?>
-
         <?php foreach ($validation_errors as $errors): ?>
             <div class="alert-danger m-2" role="alert">
                 <?= $errors; ?>
@@ -80,7 +73,7 @@
             </div>
             <button type="submit" name="send" id="send" class="mt-3 btn btn-primary btn-lg text-center">Siusti</button>
         </form>
-    <?php endif ?>
+    <?php endif; ?>
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
