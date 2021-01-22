@@ -33,7 +33,9 @@ function printData()
         echo "<tr></tr>";
         $messagePO = explode(',', $message);
         foreach ($messagePO as $value) {
-            echo "<td>$value</td>";
+            if ($value != $_POST['send']) {
+                echo "<td>$value</td>";
+            }
         }
     }
 }
